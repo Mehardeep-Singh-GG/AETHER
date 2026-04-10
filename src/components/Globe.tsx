@@ -12,12 +12,22 @@ export const Globe: React.FC<GlobeProps> = ({ threatLevel }) => {
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
+    const updateSize = () => {
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      if (rect) {
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+    };
+
+    updateSize();
+    window.addEventListener('resize', updateSize);
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const width = canvas.width;
-    const height = canvas.height;
-    const radius = Math.min(width, height) * 0.4;
+    let width = canvas.width;
+    let height = canvas.height;
     
     let rotation = 0;
     let mouseX = 0;
@@ -50,6 +60,10 @@ export const Globe: React.FC<GlobeProps> = ({ threatLevel }) => {
     }));
 
     const render = () => {
+      width = canvas.width;
+      height = canvas.height;
+      const radius = Math.min(width, height) * 0.4;
+      
       ctx.clearRect(0, 0, width, height);
       rotation += 0.003 + (mouseX * 0.01);
 
